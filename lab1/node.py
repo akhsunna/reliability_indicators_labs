@@ -32,11 +32,14 @@ class Node:
   def level(self):
     return self.binary.count('0')
 
-  def matrix_row(self, a):
+  def matrix_row(self, a, n):
     arr = []
-    for i in range(29): 
+    for i in range(n):
       if i in self.elements:
-        arr.append(reduce(lambda sum,c: sum + a[c], self.elements[i], 0))
+        v = reduce(lambda sum,c: sum + a[c], self.elements[i], 0)
+        if i == self.pi:
+          v = -1*v
+        arr.append(v)
       else:
         arr.append(0)
     return arr 
@@ -52,6 +55,3 @@ class Node:
       return r
     n_elements = list({k: to_string(k, v) for k, v in self.elements.items()}.values())
     return equation + ''.join(n_elements)[3:]
-
-
-

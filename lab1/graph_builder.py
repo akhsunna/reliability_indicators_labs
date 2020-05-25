@@ -13,14 +13,13 @@ class GraphBuilder:
     edge_labels = self.get_edge_labels()
 
     levels = {}
-    colors = []
     for n in self.nodes:
-      DG.add_node(n.pi,label=n.pi)
+      color = '#5eba7d' if n.state() else '#d0d0d0'
+      DG.add_node(n.pi,label=n.pi,color=color)
       if n.level() in levels:
         levels[n.level()] = levels[n.level()] + 1
       else:
         levels[n.level()] = 1
-      colors.append('#5eba7d' if n.state() else '#d0d0d0')
       for p in list(n.elements.keys()):
         if n.pi != p:
           DG.add_edge(p, n.pi)
@@ -34,8 +33,11 @@ class GraphBuilder:
       node_positions[n.pi] = (sp * (levels[l] - tmp[l] + 1) + st, -10 * l)
       tmp[l] = tmp[l] - 1
 
+    colors = list(map(lambda n: n[1]['color'], DG.nodes(data=True)))
+    labels = {node[0]:node[1]['label'] for node in DG.nodes(data=True)}
+
     plt.figure(figsize=(10,8)) 
-    nx.draw(DG,node_size=600,node_color=colors,pos=node_positions,prog='dot',labels={node[0]:node[1]['label'] for node in DG.nodes(data=True)})
+    nx.draw(DG,node_size=600,node_color=colors,pos=node_positions,prog='dot',labels=labels)
     nx.draw_networkx_edge_labels(DG,node_positions,edge_labels=edge_labels)
 
     plt.axis('off')

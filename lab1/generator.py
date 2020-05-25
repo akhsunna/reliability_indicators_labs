@@ -32,23 +32,11 @@ class Generator:
   def get_matrix(self, a):
     self.matrix = []
     for n in self.nodes:
-      self.matrix.append(n.matrix_row(a))
+      self.matrix.append(n.matrix_row(a, len(self.nodes)))
     return self.matrix
 
+  def get_eqs(self):
+    return map(lambda n: n.eq_str(), self.nodes)
 
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  def true_nodes(self):
+    return list(filter(lambda n: n.state(), self.nodes))
