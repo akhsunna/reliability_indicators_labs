@@ -3,11 +3,8 @@ from datetime import datetime
 import numpy as np
 from scipy.integrate import RK45
 import pandas as pd
-
-
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import matplotlib.pyplot as plt
-
 
 class Solver:
   def __init__(self, matrix, n):
@@ -19,8 +16,7 @@ class Solver:
 
   def export_solution(self):
     t0 = 0
-    y0 = 1.0 / self.n
-    y = np.repeat(y0, self.n)
+    y = self.get_y0()
     rk = RK45(self.multiply_vector, t0, y, 10000, vectorized=True)
     self.folder_name = datetime.now().strftime('%Y%m%d%H%M%S')
     os.mkdir('result/{}'.format(self.folder_name))
@@ -34,8 +30,7 @@ class Solver:
 
   def ps_state(self, step_n):
     t0 = 0
-    y0 = 1.0 / self.n
-    y = np.repeat(y0, self.n)
+    y = self.get_y0()
     rk = RK45(self.multiply_vector, t0, y, 10000, vectorized=True)
     for i in range(step_n):
       rk.step()
@@ -47,8 +42,7 @@ class Solver:
 
   def reliability(self, step_n, pis):
     t0 = 0
-    y0 = 1.0 / self.n
-    y = np.repeat(y0, self.n)
+    y = self.get_y0(pis=pis)
     rk = RK45(self.multiply_vector, t0, y, 10000, vectorized=True)
     y_res = []
     x_res = []
@@ -65,3 +59,18 @@ class Solver:
     plt.plot(x_res, y_res)
     plt.grid(True)
     plt.show()
+
+  def get_y0(self, **kw_args):
+    pis = kw_args.get('pis', [])
+    if not pis:
+      y0 = 1.0 / self.n
+      return np.repeat(y0, self.n)
+    else:
+      y0 = 1.0 / len(pis)
+      arr = []
+      for i in range(self.n):
+        if i in pis:
+          arr.append(y0)
+        else:
+          arr.append(0)
+      return arr

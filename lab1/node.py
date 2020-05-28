@@ -6,7 +6,7 @@ class Node:
   def __init__(self, pi, binary, **kwargs):
     self.pi = pi
     self.binary = binary
-    self.elements = c = kwargs.get('elements', dict())
+    self.elements = kwargs.get('elements', dict())
 
   def add_element(self, ai, cpi):
     if cpi not in self.elements:
