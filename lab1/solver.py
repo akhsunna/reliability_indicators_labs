@@ -40,7 +40,7 @@ class Solver:
     plt.bar(ps, res, align='center',width = 0.5)
     plt.show()
 
-  def reliability(self, step_n, pis):
+  def get_solutions(self, step_n, pis):
     t0 = 0
     y = self.get_y0(pis=pis)
     rk = RK45(self.multiply_vector, t0, y, 10000, vectorized=True)
@@ -48,7 +48,6 @@ class Solver:
     x_res = []
     for i in range(step_n):
       sum = 0
-      rk.step()
       res = rk.y
       res = res / np.linalg.norm(res, ord=1)
       for i, r in enumerate(res, start=0):
@@ -56,9 +55,8 @@ class Solver:
           sum = sum + r
       y_res.append(sum)
       x_res.append(rk.t)
-    plt.plot(x_res, y_res)
-    plt.grid(True)
-    plt.show()
+      rk.step()
+    return [x_res, y_res]
 
   def get_y0(self, **kw_args):
     pis = kw_args.get('pis', [])

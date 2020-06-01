@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 alphas = [0.0005, 0.0004, 0.0003, 0.00025, 0.0005]
 
-input alpha values
+# input alpha values
 for i, a in enumerate(alphas, start=0):
   v = input('Enter a{} (default {}): '.format(i + 1, a))
   if v:
@@ -42,7 +42,7 @@ if module_i:
   input = alphas[module_i]
   labels = []
   for i in range(6):
-    alphas[module_i] = input + diff
+    alphas[module_i] = round(input + diff, 5)
     labels.append('a{} = {}'.format(module_i, alphas[module_i]))
     matrix = g.get_matrix(alphas)
     s = Solver(matrix, len(g.nodes))
